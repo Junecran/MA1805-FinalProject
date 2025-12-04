@@ -4,16 +4,23 @@
 
 ## Debrief
 
+- could have probably coding a randomise maze but happy acciendent that it could respresent that after learning the bad online you can be safter = faster at solving the maze
+- could have found an easier way to get the map done without doing it by hand
+- wanted faster/smoother movement but couldnt figure it out as coding has betrayed me 
+
 ## References Used
 
-*Planning*
-- Platformer Game reference - https://feliposz.github.io/js-mini-games/platformer/game.js
 
-- Echolocation Effect - https://douglasorr.github.io/2021-12-echolocation/article.html
 
 
 
 
 
 ## Study Notes 
+
+- class
+- maybe else
+- the coollision check 
+- THis
+-  constructor instead of let in classes
 ### Info
