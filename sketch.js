@@ -10,9 +10,11 @@ let messageDelay = 20;
 let gameEnded = false;
 let keys = {};
 let menuImg;
+let myFont;
 
 function preload() {
   menuImg = loadImage("assets/SafetySearchMenu.png");
+  myFont = loadFont("assets/RobotoMedium.ttf"); // ← your font file
 }
 
 // Maze
@@ -148,7 +150,7 @@ function gameMenu() {
   let scaleX = width / menuImg.width;
   let scaleY = height / menuImg.height;
   let scale = min(scaleX, scaleY);
-
+  scale *= 0.6;
   let imgW = menuImg.width * scale;
   let imgH = menuImg.height * scale;
 
@@ -160,27 +162,30 @@ function gameMenu() {
   drawResetButton();
 }
 function drawResetButton() {
-  let w = width * 0.18;
-  let h = height * 0.05;
-  let x = width / 2 - w / 2;
-  let y = height * 0.7;
+  let w = width * 0.09;
+  let h = height * 0.027;
+  let x = width / 2.2 - w / 1.5;
+  let y = height * 0.545;
 
-  fill(isGameAtOrigin() ? 180 : [255, 120, 120]);
+  fill(isGameAtOrigin() ? [248, 249, 250] : [208, 209, 210]);
   noStroke();
   rect(x, y, w, h, 10);
 
-  fill(0);
+  fill(70);
   textAlign(CENTER, CENTER);
-  textSize(h * 0.5);
-  text("RESET", x + w / 2, y + h / 2);
+  textSize(h * 0.44);
+  textFont(myFont);   // ← apply your font here
+
+  text("Game Reset", x + w / 2, y + h / 2.19);
 }
+
 
 function mousePressed() {
   if (showMenu) {
-    let w = width * 0.18;
-    let h = height * 0.05;
-    let x = width / 2 - w / 2;
-    let y = height * 0.7;
+   let w = width * 0.09;
+   let h = height * 0.027;
+   let x = width / 2.2 - w / 1.5;
+   let y = height * 0.545;
     if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h) resetGame();
   }
 }
