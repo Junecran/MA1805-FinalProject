@@ -11,10 +11,17 @@ let gameEnded = false;
 let keys = {};
 let menuImg;
 let myFont;
+let menuImgX = 0;
+let menuImgY = 0;
+let menuImgW = 600;  // default fixed size
+let menuImgH = 600;
+let showSecondScreen = false;
+let secondImg;
 
 function preload() {
   menuImg = loadImage("assets/SafetySearchMenu.png");
-  myFont = loadFont("assets/RobotoMedium.ttf"); // ← your font file
+  secondImg = loadImage("assets/SSMHowToPlay.png"); 
+  myFont = loadFont("assets/RobotoMedium.ttf");
 }
 
 // Maze
@@ -75,6 +82,53 @@ function windowResized() {
   updateOffsets();
 }
 
+function drawSecondScreen() {
+  background(255);
+
+  let imgW = 950;
+  let imgH = 600;
+
+  let imgX = (width - imgW) / 2;
+  let imgY = (height - imgH) / 5;
+
+  image(secondImg, imgX, imgY, imgW, imgH);
+
+  drawBackButton(imgX, imgY, imgW, imgH);
+}
+
+function drawBackButton(imgX, imgY, imgW, imgH) {
+  let w = imgW * 0.25;
+  let h = imgH * 0.06;
+
+  // Button position near bottom center of second image
+  let x = imgX + imgW * -0.05;
+  let y = imgY + imgH * 0.22;
+
+ 
+  fill(70);
+  textAlign(CENTER, CENTER);
+  textSize(h * 0.44);
+  textFont(myFont);
+  text("Back to Main Menu", x + w / 2, y + h / 2.2);
+}
+
+function drawSecondButton() {
+  let w = menuImgW * 0.25;
+  let h = menuImgH * 0.06;
+
+  let x = menuImgX + menuImgW * 0.37;
+  let y = menuImgY + menuImgH * 0.68; // above reset button
+
+  fill(230);
+  rect(x, y, w, h, 10);
+
+  fill(70);
+  textAlign(CENTER, CENTER);
+  textSize(h * 0.44);
+  textFont(myFont);
+  text("Next Page", x + w / 2, y + h / 2.2);
+}
+
 // ----------------- GAME LOOP -----------------
 function draw() {
   background(0);
@@ -100,6 +154,7 @@ function draw() {
     }
     return;
   }
+  
 
   drawMaze();
   player.show();
@@ -126,7 +181,14 @@ function draw() {
     }
   });
 
-  if (showMenu) gameMenu();
+  if (showMenu) {
+  if (showSecondScreen) {
+    drawSecondScreen();
+  } else {
+    gameMenu();
+  }
+  return;
+}
 }
 
 // ----------------- MAZE -----------------
@@ -144,28 +206,31 @@ function drawMaze() {
 
 // ----------------- MENU -----------------
 function gameMenu() {
-  background(255); // optional, in case your image doesn't cover full area
+  background(255);
 
-  // Calculate scale to fit image inside canvas
-  let scaleX = width / menuImg.width;
-  let scaleY = height / menuImg.height;
-  let scale = min(scaleX, scaleY);
-  scale *= 0.6;
-  let imgW = menuImg.width * scale;
-  let imgH = menuImg.height * scale;
+  // Fixed menu image size (edit these to any size you want)
+  menuImgW = 750;
+  menuImgH = 600;
 
-  let imgX = (width - imgW) / 2;
-  let imgY = (height - imgH) / 2;
+  // Center it
+  menuImgX = (width - menuImgW) / 2;
+  menuImgY = (height - menuImgH) / 2;
 
-  image(menuImg, imgX, imgY, imgW, imgH);
+  // Draw image
+  image(menuImg, menuImgX, menuImgY, menuImgW, menuImgH);
 
   drawResetButton();
+  drawSecondButton();
 }
+
 function drawResetButton() {
-  let w = width * 0.09;
-  let h = height * 0.027;
-  let x = width / 2.2 - w / 1.5;
-  let y = height * 0.545;
+  // Button size relative to image
+  let w = menuImgW * 0.15;   // 25% of image width
+  let h = menuImgH * 0.05;   // 6% of image height
+
+  // Position relative to the bottom-middle of the image
+  let x = menuImgX + menuImgW * 0.315;
+  let y = menuImgY + menuImgH * 0.58;
 
   fill(isGameAtOrigin() ? [248, 249, 250] : [208, 209, 210]);
   noStroke();
@@ -174,19 +239,54 @@ function drawResetButton() {
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.44);
-  textFont(myFont);   // ← apply your font here
+  textFont(myFont);
 
-  text("Game Reset", x + w / 2, y + h / 2.19);
+  text("Game Reset", x + w / 2, y + h / 2.2);
 }
 
-
 function mousePressed() {
-  if (showMenu) {
-   let w = width * 0.09;
-   let h = height * 0.027;
-   let x = width / 2.2 - w / 1.5;
-   let y = height * 0.545;
-    if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h) resetGame();
+  if (showMenu && !showSecondScreen) {
+
+    // reset button
+    let w1 = menuImgW * 0.25;
+    let h1 = menuImgH * 0.06;
+    let x1 = menuImgX + menuImgW * 0.37;
+    let y1 = menuImgY + menuImgH * 0.76;
+
+    if (mouseX >= x1 && mouseX <= x1 + w1 &&
+        mouseY >= y1 && mouseY <= y1 + h1) {
+      resetGame();
+      return;
+    }
+
+    
+    // next page button
+    let w2 = w1;
+    let h2 = h1;
+    let x2 = menuImgX + menuImgW * 0.37;
+    let y2 = menuImgY + menuImgH * 0.68;
+
+    if (mouseX >= x2 && mouseX <= x2 + w2 &&
+        mouseY >= y2 && mouseY <= y2 + h2) {
+      showSecondScreen = true;
+      return;
+    }
+  }
+
+  // ---------- SECOND SCREEN: BACK BUTTON ----------
+  if (showSecondScreen) {
+
+    let bw = menuImgW * 0.25;
+    let bh = menuImgH * 0.06;
+
+    let bx = menuImgX + menuImgW * -0.05;
+    let by = menuImgY + menuImgH * 0.22;
+
+    if (mouseX >= bx && mouseX <= bx + bw &&
+        mouseY >= by && mouseY <= by + bh) {
+      showSecondScreen = false;
+      return;
+    }
   }
 }
 
