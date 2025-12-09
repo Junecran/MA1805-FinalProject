@@ -163,6 +163,7 @@ function setup() {
   resetGame();
 }
 
+// Functions for the Resizing window //
 function updateOffsets() {
   offsetX = (width - cols * tileSize) / 2;
   offsetY = (height - rows * tileSize) / 2;
@@ -175,8 +176,7 @@ function windowResized() {
 }
 
 
-//  MENU
-
+//  Menu Button //
 function drawResetButton() {
 
   let w = mainMenu.width * restButtonPos.rW;   
@@ -184,7 +184,7 @@ function drawResetButton() {
   let x = mainMenu.x + mainMenu.width * restButtonPos.rX;
   let y = mainMenu.y + mainMenu.height * restButtonPos.rY;
 
-  fill(gameStartEvent() ? [248, 249, 250] : [208, 209, 210]);
+  fill(gameStartEvent() ? [248, 249, 250] : [208, 209, 210]); // Reset button colour
   noStroke();
   rect(x, y, w, h, 10);
 
@@ -207,29 +207,28 @@ function drawBackButton() {
  
   fill(70);
   textAlign(CENTER, CENTER);
-  textSize(h * 0.44);
+  textSize(h * 0.35);
   textFont(robotoFont);
   text("Back to Main Menu", x + w / 2, y + h / 2.2);
 }
 
-function drawSecondButton() {
+function drawInfoMenu() {
   let w = mainMenu.width * 0.25;
   let h = mainMenu.height * 0.06;
 
-  let x = mainMenu.x + mainMenu.width * 0.37;
-  let y = mainMenu.y + mainMenu.height * 0.68;// above reset button
+  let x = mainMenu.x + mainMenu.width * 0.09;
+  let y = mainMenu.y + mainMenu.height * 0.408;// above reset button
 
-  fill(230);
-  rect(x, y, w, h, 10);
+
 
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.44);
   textFont(robotoFont);
-  text("Next Page", x + w / 2, y + h / 2.2);
+  text("How to play?", x + w / 2, y + h / 2.2);
 }
 
-// ----------------- GAME LOOP -----------------
+// -- Game Loop -- //
 function draw() {
   background(233, 236, 240);
 
@@ -291,22 +290,22 @@ function draw() {
    background(255);
    image(mainMenu.img, mainMenu.x, mainMenu.y, mainMenu.width, mainMenu.height);
    drawResetButton();
-   drawSecondButton();
+   drawInfoMenu();
   }
   return;
 }
 }
 
-// ----------------- MAZE -----------------
+//  -- Maze Appearance -- //
 function drawMaze() {
-  noStroke(); // remove outlines
+  noStroke(); // Remove outlines
 
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
 
-      if (maze[y][x] === 1) fill(89, 90, 92); // maze colour
-      else if (maze[y][x] === 3) fill(0, 255, 0);
-      else fill(233, 236, 240);
+      if (maze[y][x] === 1) fill(89, 90, 92); // Walls tile colour
+      else if (maze[y][x] === 3) fill(0, 255, 0); // Win tile colour
+      else fill(233, 236, 240); // Path/empty tile colour
 
       rect(
         offsetX + x * tileSize - 0.5,
@@ -319,12 +318,12 @@ function drawMaze() {
 }
 
 
-// ----------------- RESET -----------------
+// -- New Game Function -- //
 function resetGame() {
-  player = new Player(39, 41);
+  player = new Player(39, 41); // Player spawn point
   enemies = [
-    new Enemy(9, 9),
-    new Enemy(75, 75),
+    new Enemy(9, 9), // Enemies spawn point  // Add more enemies here if wanted
+    new Enemy(75, 75), 
     new Enemy(9, 75),
     new Enemy(75, 9),
     new Enemy(60, 30),
@@ -337,9 +336,11 @@ function resetGame() {
   overlayMessage = "";
 }
 
-// ----------------- GAME LOGIC -----------------
+// -- Game Logic -- //
 function gameStartEvent() {
+  // Add the new enemies below [X,Y]
   let startEnemies = [[9,9],[75,75],[9,75],[75,9],[60, 30],[30, 60],[12,5]];
+
   if (player.x !== 39 || player.y !== 41) return false;
   for (let i=0;i<enemies.length;i++) {
     if (enemies[i].x !== startEnemies[i][0] || enemies[i].y !== startEnemies[i][1]) return false;
@@ -428,7 +429,7 @@ class Player {
  // Movement Settings //
   update() {
     if (this.moveCooldown>0){ this.moveCooldown--; return; }
-    this.moveCooldown=5; // Movement speed
+    this.moveCooldown=8; // Movement speed
 
 // Controls
     if (keys['ArrowLeft'] || keys['a'] || keys['A']) {this.tryMove(-1, 0);}
