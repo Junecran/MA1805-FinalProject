@@ -1,11 +1,5 @@
 
-   // Preload //  
 
-function preload() {
-  mainMenuImg = loadImage("Assets/SafetySearchMenu.png");
-  infoMenu = loadImage("Assets/SSMHowToPlay.png"); 
-  robotoFont = loadFont("Assets/RobotoMedium.ttf");
-}
 
    // -- Data -- //  
 let player;
@@ -32,8 +26,10 @@ let restButtonPos = {
  rY: 0.58
 };
 let infoMenuPos = {
- imX: 0.37,
- imY: 0.68
+ imW: 0.782,
+ imH: 0.06,
+ imX: 0.0955,
+ imY: 0.408
 };
 let backButtonPos = {
  bW: 0.25,
@@ -134,6 +130,13 @@ let maze = [
 
 
    // -- Setup & Menus Settings -- //
+// Preload //  
+function preload() {
+  mainMenuImg = loadImage("Assets/SafetySearchMenu.png");
+  infoMenu = loadImage("Assets/SSMHowToPlay.png"); 
+  robotoFont = loadFont("Assets/RobotoMedium.ttf");
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
@@ -176,35 +179,65 @@ function windowResized() {
 }
 
 
-//  Menu Button //
+//  Menu Appearance Button //
 function drawResetButton() {
-
-  let w = mainMenu.width * restButtonPos.rW;   
-  let h = mainMenu.height* restButtonPos.rH;  
+  let w = mainMenu.width * restButtonPos.rW;
+  let h = mainMenu.height * restButtonPos.rH;
   let x = mainMenu.x + mainMenu.width * restButtonPos.rX;
   let y = mainMenu.y + mainMenu.height * restButtonPos.rY;
 
-  fill(gameStartEvent() ? [248, 249, 250] : [208, 209, 210]); // Reset button colour
+  let hovering = 
+  mouseX >= x && mouseX <= x + w &&
+  mouseY >= y && mouseY <= y + h;
+
+// Highlight Mouse Target
+  fill(hovering ? 180 : 248); // Highlight colour
   noStroke();
   rect(x, y, w, h, 10);
-
+// Text
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.44);
   textFont(robotoFont);
-
   text("Game Reset", x + w / 2, y + h / 2.2);
+}
+
+function drawInfoMenu() {
+  let w = mainMenu.width * infoMenuPos.imW;
+  let h = mainMenu.height * infoMenuPos.imH;
+  let x = mainMenu.x + mainMenu.width * infoMenuPos.imX;
+  let y = mainMenu.y + mainMenu.height * infoMenuPos.imY;
+
+  let hovering =
+   mouseX >= x && mouseX <= x + w &&
+   mouseY >= y && mouseY <= y + h;
+
+// Highlight Mouse Target
+  fill(0, 0, 0, hovering ? 100 : 0); 
+  noStroke();
+  rect(x, y, w, h);
+//Text
+  fill(70);
+  textAlign(CENTER, CENTER);
+  textSize(h * 0.44);
+  textFont(robotoFont);
+  text("How to Play?", x + w / 6, y + h / 2.2);
 }
 
 function drawBackButton() {
   let w = infoMenu.width * 0.25;
-  let h = infoMenu.height* 0.06;
-
-  // Button position near bottom center of second image
+  let h = infoMenu.height * 0.06;
   let x = infoMenu.x + infoMenu.width * -0.05;
   let y = infoMenu.y + infoMenu.height * 0.22;
 
- 
+  // Hover detection
+  let hovering = mouseX >= x && mouseX <= x + w &&
+                 mouseY >= y && mouseY <= y + h;
+
+  fill(hovering ? 180 : 248);
+  noStroke();
+  rect(x, y, w, h, 10);
+
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.35);
@@ -212,21 +245,53 @@ function drawBackButton() {
   text("Back to Main Menu", x + w / 2, y + h / 2.2);
 }
 
-function drawInfoMenu() {
-  let w = mainMenu.width * 0.25;
-  let h = mainMenu.height * 0.06;
+//  Menu Button Inputs  //
+function mousePressed() {
+  if (showMainMenu && !showInfoMenu) {
 
-  let x = mainMenu.x + mainMenu.width * 0.09;
-  let y = mainMenu.y + mainMenu.height * 0.408;// above reset button
+// Reset Menu Button //
+    let w1 = mainMenu.width * restButtonPos.rW; 
+    let h1 = mainMenu.height * restButtonPos.rH;
+    let x1 = mainMenu.x + mainMenu.width  * restButtonPos.rX;
+    let y1 = mainMenu.y + mainMenu.height * restButtonPos.rY;
+
+    if (mouseX >= x1 && mouseX <= x1 + w1 &&
+        mouseY >= y1 && mouseY <= y1 + h1) {
+      resetGame();
+      return;
+    }
+ 
+// Information Menu Button 'How To Play?'//
+  let w2 = mainMenu.width * infoMenuPos.imW;
+  let h2 = mainMenu.height * infoMenuPos.imH;
+  let x2 = mainMenu.x + mainMenu.width * infoMenuPos.imX;
+  let y2 = mainMenu.y + mainMenu.height * infoMenuPos.imY;
 
 
+    if (mouseX >= x2 && mouseX <= x2 + w2 &&
+        mouseY >= y2 && mouseY <= y2 + h2) {
+      showInfoMenu = true;
+      return;
+    }
+  }
 
-  fill(70);
-  textAlign(CENTER, CENTER);
-  textSize(h * 0.44);
-  textFont(robotoFont);
-  text("How to play?", x + w / 2, y + h / 2.2);
+  // Back to Main Menu Button //
+    if (showInfoMenu) {
+
+    let w3 = mainMenu.width * backButtonPos.bW;
+    let h3 = mainMenu.height * backButtonPos.bH;
+    let x3 = mainMenu.x + mainMenu.width  * backButtonPos.bX;
+    let y3 = mainMenu.y + mainMenu.height * backButtonPos.bY;
+
+    if (mouseX >= x3 && mouseX <= x3 + w3 &&
+        mouseY >= y3 && mouseY <= y3 + h3) {
+      showInfoMenu = false;
+      return;
+    }
+  }
 }
+
+
 
 // -- Game Loop -- //
 function draw() {
@@ -279,6 +344,7 @@ function draw() {
       messageTimer = messageDelay;
     }
   });
+
 
   // Menu Drawing //
   if (showMainMenu) {
@@ -348,50 +414,7 @@ function gameStartEvent() {
   return true;
 }
 
- // -- Inputs -- //
-function mousePressed() {
-  if (showMainMenu && !showInfoMenu) {
-
-  // Reset Menu Button //
-    let w1 = mainMenu.width * restButtonPos.rW; 
-    let h1 = mainMenu.height * restButtonPos.rH;
-    let x1 = mainMenu.x + mainMenu.width  * restButtonPos.rX;
-    let y1 = mainMenu.y + mainMenu.height * restButtonPos.rY;
-
-    if (mouseX >= x1 && mouseX <= x1 + w1 &&
-        mouseY >= y1 && mouseY <= y1 + h1) {
-      resetGame();
-      return;
-    }
-
-  // Information Menu Button //
-    let w2 = w1;
-    let h2 = h1;
-    let x2 = mainMenu.x + mainMenu.width  * infoMenuPos.imX;
-    let y2 = mainMenu.y + mainMenu.height * infoMenuPos.imY;
-
-    if (mouseX >= x2 && mouseX <= x2 + w2 &&
-        mouseY >= y2 && mouseY <= y2 + h2) {
-      showInfoMenu = true;
-      return;
-    }
-  }
-
-  // Back to Main Menu Button //
-    if (showInfoMenu) {
-
-    let w3 = mainMenu.width * backButtonPos.bW;
-    let h3 = mainMenu.height * backButtonPos.bH;
-    let x3 = mainMenu.x + mainMenu.width  * backButtonPos.bX;
-    let y3 = mainMenu.y + mainMenu.height * backButtonPos.bY;
-
-    if (mouseX >= x3 && mouseX <= x3 + w3 &&
-        mouseY >= y3 && mouseY <= y3 + h3) {
-      showInfoMenu = false;
-      return;
-    }
-  }
-}
+ 
 
 // Game Controls //
 function keyPressed() {
