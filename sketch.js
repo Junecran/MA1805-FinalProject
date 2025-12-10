@@ -267,23 +267,23 @@ function drawBackButton() {
   text("Back to Main Menu", x + w / 2, y + h / 2.2);
 }
 
+// README Button //
 function drawReadmeButton() {
   let w = mainMenu.width * readmeButtonPos.rmW;
   let h = mainMenu.height * readmeButtonPos.rmH;
   let x = mainMenu.x + mainMenu.width * readmeButtonPos.rmX;
   let y = mainMenu.y + mainMenu.height * readmeButtonPos.rmY;
 
-  // Hover highlight
+  // Highlight Mouse Target
   let hovering =
     mouseX >= x && mouseX <= x + w &&
     mouseY >= y && mouseY <= y + h;
 
   if (hovering) {
-    fill(0, 0, 0, 100);
+    fill(0, 0, 0, 100); // Highlight colour
     noStroke();
     rect(x, y, w, h);
   }
-
   // Text
   fill(70);
   textAlign(CENTER, CENTER);
@@ -356,7 +356,7 @@ let y5 = mainMenu.y + mainMenu.height * readmeButtonPos.rmY;
 
 if (mouseX >= x5 && mouseX <= x5 + w5 &&
     mouseY >= y5 && mouseY <= y5 + h5) {
-  window.open("https://github.com/Junecran/MA1805-FinalProject/blob/main/README.md"); 
+  window.open("https://junecran.github.io/MA1805-FinalProject/"); 
   return;
 }
 }
