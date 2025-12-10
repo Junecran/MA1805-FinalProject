@@ -1,24 +1,23 @@
 
-
-
-   // -- Data -- //  
+// -- Global Data -- //  
 let player;
 let enemies = [];
-let showMainMenu = true;
+let keys = {};
+let tileSize, cols, rows;
+// Dynamic positioning
 let offsetX = 0;
 let offsetY = 0;
+// Messages overlay
 let overlayMessage = "";
 let showTemporaryMessage = false;
 let messageTimer = 0;
 let messageDelay = 20;
-let gameEndEvent= false;
-let keys = {};
+// Menus and assets data
 let mainMenuImg;
+let infoMenuImg;
 let robotoFont;
+let showMainMenu = true;
 let showInfoMenu = false;
-let infoMenu;
-let tileSize, cols, rows;
-
 let restButtonPos = {
  rW: 0.15, 
  rH: 0.05, 
@@ -34,11 +33,10 @@ let infoMenuPos = {
 let backButtonPos = {
  bW: 0.25,
  bH: 0.06,
- bX: -0.05,
- bY: 0.22
+ bX: -0.06,
+ bY: 0.18
 };
-
-// Maze //
+// Maze Map //
 let maze = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -124,12 +122,6 @@ let maze = [
 ];
 
 
-
-
-
-
-
-   // -- Setup & Menus Settings -- //
 // Preload //  
 function preload() {
   mainMenuImg = loadImage("Assets/SafetySearchMenu.png");
@@ -137,41 +129,42 @@ function preload() {
   robotoFont = loadFont("Assets/RobotoMedium.ttf");
 }
 
+
+// -- Setup & Menus Positions -- //
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-// Main Menu Image Settings //
-   mainMenu = {
-    img: mainMenuImg,
-    width: 750, // Size 
-    height: 600,
-    x: (width - 750) / 2, // Placement
-    y: (height - 600) / 2
+  // Main Menu Image Settings //
+  mainMenu = {
+   img: mainMenuImg,
+   width: 750, // Size 
+   height: 600,
+   x: (width - 750) / 2, // Placement
+   y: (height - 600) / 2
    };
 
-// Information Menu Settings //
-   infoMenu = {
-    img: infoMenuImg,
-    width: 900 , // Size 
-    height: 700,
-    x: (width - 900) / 2, // Placement
-    y: (height - 700) / 4
+  // Information Menu Settings //
+  infoMenu = {
+   img: infoMenuImg,
+   width: 900 , // Size 
+   height: 700,
+   x: (width - 900) / 2, // Placement
+   y: (height - 700) / 4
    };
 
   cols = maze[0].length;
   rows = maze.length;
   tileSize = floor(min(width / cols, height / rows));
 
-  updateOffsets(); // Dynamic resizing For the menus
+  updateOffsets(); // Dynamic resizing 
   resetGame();
 }
 
-// Functions for the Resizing window //
+// Resizing Window //
 function updateOffsets() {
   offsetX = (windowWidth - cols * tileSize) / 2;
   offsetY = (windowHeight - rows * tileSize) / 2;
 }
-
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   tileSize = floor(min(width / cols, height / rows));
@@ -179,22 +172,30 @@ function windowResized() {
 }
 
 
-//  Menu Appearance Button //
+// ---  Menu Buttons --- //
+
+// -- Appearance -- //
+// Reset Button //
 function drawResetButton() {
   let w = mainMenu.width * restButtonPos.rW;
   let h = mainMenu.height * restButtonPos.rH;
   let x = mainMenu.x + mainMenu.width * restButtonPos.rX;
   let y = mainMenu.y + mainMenu.height * restButtonPos.rY;
-
+  // Conditional Appearance 
+  fill(gameStartEvent() ? 250 : [255, 120, 120]); // Main Colour
+  noStroke();
+  rect(x, y, w, h, 10);
+  // Highlight Mouse Target
   let hovering = 
   mouseX >= x && mouseX <= x + w &&
   mouseY >= y && mouseY <= y + h;
 
-// Highlight Mouse Target
-  fill(hovering ? 180 : 248); // Highlight colour
-  noStroke();
-  rect(x, y, w, h, 10);
-// Text
+   if (hovering) {
+    fill(0, 0, 0, 100); // Highlight colour
+    noStroke();
+    rect(x, y, w, h, 10);
+  }
+  // Text
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.44);
@@ -202,21 +203,23 @@ function drawResetButton() {
   text("Game Reset", x + w / 2, y + h / 2.2);
 }
 
+// Information Menu Button //
 function drawInfoMenu() {
   let w = mainMenu.width * infoMenuPos.imW;
   let h = mainMenu.height * infoMenuPos.imH;
   let x = mainMenu.x + mainMenu.width * infoMenuPos.imX;
   let y = mainMenu.y + mainMenu.height * infoMenuPos.imY;
-
+  // Highlight Mouse Target
   let hovering =
    mouseX >= x && mouseX <= x + w &&
    mouseY >= y && mouseY <= y + h;
 
-// Highlight Mouse Target
-  fill(0, 0, 0, hovering ? 100 : 0); 
-  noStroke();
-  rect(x, y, w, h);
-//Text
+  if (hovering) {
+    fill(0, 0, 0, 100); // Highlight colour
+    noStroke();
+    rect(x, y, w, h);
+  }
+  // Text
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.44);
@@ -224,20 +227,23 @@ function drawInfoMenu() {
   text("How to Play?", x + w / 6, y + h / 2.2);
 }
 
+// Back to Menu Button  //
 function drawBackButton() {
   let w = infoMenu.width * backButtonPos.bW;
   let h = infoMenu.height * backButtonPos.bH;
   let x = infoMenu.x + infoMenu.width * backButtonPos.bX;
   let y = infoMenu.y + infoMenu.height * backButtonPos.bY;
+  // Highlight Mouse Target
+  let hovering = 
+   mouseX >= x && mouseX <= x + w &&
+   mouseY >= y && mouseY <= y + h;
 
-  // Hover detection
-  let hovering = mouseX >= x && mouseX <= x + w &&
-                 mouseY >= y && mouseY <= y + h;
-
-  fill(hovering ? 180 : 248);
-  noStroke();
-  rect(x, y, w, h, 10);
-
+  if (hovering) {
+   fill(0, 0, 0, hovering ? 100 : 0); // Highlight colour
+   noStroke();
+   rect(x + 30, y-3, w - 60, h);
+  }
+  // Text 
   fill(70);
   textAlign(CENTER, CENTER);
   textSize(h * 0.35);
@@ -245,31 +251,29 @@ function drawBackButton() {
   text("Back to Main Menu", x + w / 2, y + h / 2.2);
 }
 
-//  Menu Button Inputs  //
+//  -- Menu Button Inputs --  //
 function mousePressed() {
   if (showMainMenu && !showInfoMenu) {
-
-// Reset Menu Button //
+  // Reset Button 'Game Reset'//
     let w1 = mainMenu.width * restButtonPos.rW; 
     let h1 = mainMenu.height * restButtonPos.rH;
     let x1 = mainMenu.x + mainMenu.width  * restButtonPos.rX;
     let y1 = mainMenu.y + mainMenu.height * restButtonPos.rY;
 
     if (mouseX >= x1 && mouseX <= x1 + w1 &&
-        mouseY >= y1 && mouseY <= y1 + h1) {
+      mouseY >= y1 && mouseY <= y1 + h1) {
       resetGame();
       return;
     }
  
-// Information Menu Button 'How To Play?'//
-  let w2 = mainMenu.width * infoMenuPos.imW;
-  let h2 = mainMenu.height * infoMenuPos.imH;
-  let x2 = mainMenu.x + mainMenu.width * infoMenuPos.imX;
-  let y2 = mainMenu.y + mainMenu.height * infoMenuPos.imY;
-
+  // Information Menu Button 'How To Play?'//
+    let w2 = mainMenu.width * infoMenuPos.imW;
+    let h2 = mainMenu.height * infoMenuPos.imH;
+    let x2 = mainMenu.x + mainMenu.width * infoMenuPos.imX;
+    let y2 = mainMenu.y + mainMenu.height * infoMenuPos.imY;
 
     if (mouseX >= x2 && mouseX <= x2 + w2 &&
-        mouseY >= y2 && mouseY <= y2 + h2) {
+      mouseY >= y2 && mouseY <= y2 + h2) {
       showInfoMenu = true;
       return;
     }
@@ -277,23 +281,51 @@ function mousePressed() {
 
   // Back to Main Menu Button //
     if (showInfoMenu) {
-
-    let w3 = mainMenu.width * backButtonPos.bW;
-    let h3 = mainMenu.height * backButtonPos.bH;
-    let x3 = mainMenu.x + mainMenu.width  * backButtonPos.bX;
-    let y3 = mainMenu.y + mainMenu.height * backButtonPos.bY;
+    let w3 = infoMenu.width * backButtonPos.bW;
+    let h3 = infoMenu.height * backButtonPos.bH;
+    let x3 = infoMenu.x + infoMenu.width  * backButtonPos.bX;
+    let y3 = infoMenu.y + infoMenu.height * backButtonPos.bY;
 
     if (mouseX >= x3 && mouseX <= x3 + w3 &&
-        mouseY >= y3 && mouseY <= y3 + h3) {
+      mouseY >= y3 && mouseY <= y3 + h3) {
       showInfoMenu = false;
       return;
     }
   }
 }
 
+// -- Reset Game Function -- //
+function resetGame() {
+  player = new Player(39, 41); // Player spawn point
+  enemies = [
+    new Enemy(9, 9), // Enemies spawn point  // Add more enemies here if wanted
+    new Enemy(75, 75), 
+    new Enemy(9, 75),
+    new Enemy(75, 9),
+    new Enemy(60, 30),
+    new Enemy(30, 60),
+    new Enemy(12, 5, true)
+  ];
+  gameEndEvent= false;
+  showMainMenu = true;
+  showTemporaryMessage = false;
+  overlayMessage = "";
+}
+// -- Game Initial State -- //
+// For the reset function
+function gameStartEvent() {
+  // Add the new enemies below [X,Y] otherwise it breaks 
+  let startEnemies = [[9,9],[75,75],[9,75],[75,9],[60, 30],[30, 60],[12,5]];
+
+  if (player.x !== 39 || player.y !== 41) return false;
+  for (let i=0;i<enemies.length;i++) {
+    if (enemies[i].x !== startEnemies[i][0] || enemies[i].y !== startEnemies[i][1]) return false;
+  }
+  return true;
+}
 
 
-// -- Game Loop -- //
+// -- Game Loop -- // need to sort out
 function draw() {
   background(233, 236, 240);
 
@@ -384,43 +416,11 @@ function drawMaze() {
 }
 
 
-// -- New Game Function -- //
-function resetGame() {
-  player = new Player(39, 41); // Player spawn point
-  enemies = [
-    new Enemy(9, 9), // Enemies spawn point  // Add more enemies here if wanted
-    new Enemy(75, 75), 
-    new Enemy(9, 75),
-    new Enemy(75, 9),
-    new Enemy(60, 30),
-    new Enemy(30, 60),
-    new Enemy(12, 5, true)
-  ];
-  gameEndEvent= false;
-  showMainMenu = true;
-  showTemporaryMessage = false;
-  overlayMessage = "";
-}
-
-// -- Game Logic -- //
-function gameStartEvent() {
-  // Add the new enemies below [X,Y]
-  let startEnemies = [[9,9],[75,75],[9,75],[75,9],[60, 30],[30, 60],[12,5]];
-
-  if (player.x !== 39 || player.y !== 41) return false;
-  for (let i=0;i<enemies.length;i++) {
-    if (enemies[i].x !== startEnemies[i][0] || enemies[i].y !== startEnemies[i][1]) return false;
-  }
-  return true;
-}
-
- 
-
-// Game Controls //
+// -- Game Controls -- //
+// Menus Toggle //
 function keyPressed() {
   keys[key] = true;
-
-  if (keyCode === 13) { // ENTER
+  if (keyCode === 13) { // 'ENTER' Key Code to control the Menus
     if (showMainMenu) {
       showMainMenu = false;
       gameEndEvent= false;
@@ -429,40 +429,40 @@ function keyPressed() {
     }
   }
 }
-function keyReleased() { keys[key] = false;
+// Key Function //
+function keyReleased() { keys[key] = false; 
 }
  
 
-  // --- Player --- //
+// --- Game Characters Data --- //
+
+// -- Player -- //
 class Player {
    constructor(x, y) {
     this.x = x;
     this.y = y;
     this.moveCooldown = 0;
   }
-
- // Player's Model //
+ // Player's Appearance  //
   show() {
-    fill(0);
-    ellipse(offsetX + this.x*tileSize + tileSize/2,
-            offsetY + this.y*tileSize + tileSize/2,
-            tileSize*0.8);
+    fill(0); // Colour
+    ellipse(offsetX + this.x * tileSize + tileSize / 2,
+            offsetY + this.y * tileSize + tileSize / 2,
+            tileSize * 0.8);
   }
 
  // Movement Settings //
   update() {
-    if (this.moveCooldown>0){ this.moveCooldown--; return; }
-    this.moveCooldown=8; // Movement speed
-
-// Controls
-    if (keys['ArrowLeft'] || keys['a'] || keys['A']) {this.tryMove(-1, 0);}
-    if (keys['ArrowRight'] || keys['d'] || keys['D']) {this.tryMove(1, 0);}
-    if (keys['ArrowUp'] || keys['w'] || keys['W']) {this.tryMove(0, -1);}
-    if (keys['ArrowDown'] || keys['s'] || keys['S']) {this.tryMove(0, 1);}
+    if (this.moveCooldown > 0){ this.moveCooldown--; return; }
+    this.moveCooldown = 8; // Movement speed
+// Player Controls
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) {this.collison(-1, 0);}
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) {this.collison(1, 0);}
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) {this.collison(0, -1);}
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) {this.collison(0, 1);}
   }
-  
-// Collision
-  tryMove(dx,dy){
+// Maze Wall Collision 
+  collison(dx,dy){
     let nx = this.x + dx;
     let ny = this.y + dy;
 
@@ -473,7 +473,7 @@ class Player {
   }
 }
 
-// ----------------- ENEMY -----------------
+// -- Enemy -- // need to sort out
 class Enemy {
   constructor(x, y, alwaysChase=false, path=null){
     this.x = x;
