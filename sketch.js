@@ -15,8 +15,10 @@ let messageDelay = 20;
 // Menus and assets data
 let mainMenuImg;
 let infoMenuImg;
+let popUpImg;
 let robotoFont;
 let showMainMenu = true;
+let showPopUp = false;
 let showInfoMenu = false;
 let restButtonPos = {
  rW: 0.15, 
@@ -72,7 +74,7 @@ let maze = [
 [1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
 [1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
 [1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
-[1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+[1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,3,0,0,0,0,2,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
 [1,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
 [1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
 [1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
@@ -126,6 +128,7 @@ let maze = [
 function preload() {
   mainMenuImg = loadImage("Assets/SafetySearchMenu.png");
   infoMenuImg = loadImage("Assets/SSMHowToPlay.png"); 
+  popUpImg = loadImage("Assets/SSMPopUp.png"); 
   robotoFont = loadFont("Assets/RobotoMedium.ttf");
 }
 
@@ -150,6 +153,14 @@ function setup() {
    height: 700,
    x: (width - 900) / 2, // Placement
    y: (height - 700) / 4
+   };
+
+   popUp = {
+    img: popUpImg,
+    width: 900 , // Size 
+    height: 700,
+    x: (width - 900) / 2, // Placement
+    y: (height - 700) / 4
    };
 
   cols = maze[0].length;
@@ -251,7 +262,7 @@ function drawBackButton() {
   text("Back to Main Menu", x + w / 2, y + h / 2.2);
 }
 
-//  -- Menu Button Inputs --  //
+//  -- Button Inputs --  //
 function mousePressed() {
   if (showMainMenu && !showInfoMenu) {
   // Reset Button 'Game Reset'//
@@ -292,6 +303,21 @@ function mousePressed() {
       return;
     }
   }
+
+  // Pop UP //
+if (showPopUp) {
+  let popUpW = popUp.width * 0.8;
+  let popUpH = popUp.height * 0.8;
+  let popUpX = width / 2 - popUpW / 2;
+  let popUpY = height / 2 - popUpH / 2;
+
+  if (mouseX >= popUpX && mouseX <= popUpX + popUpW &&
+      mouseY >= popUpY && mouseY <= popUpY + popUpH) {
+    showPopUp = false;
+    return;
+  }
+}
+
 }
 
 // -- Reset Game Function -- //
@@ -367,6 +393,16 @@ function draw() {
     messageTimer = messageDelay;
   }
 
+// Pop up condition
+  if (!showPopUp && maze[player.y][player.x] === 2) {
+  showPopUp = true;
+  }
+ if (showPopUp) {
+  imageMode(CENTER);
+  image(popUp.img, width / 2, height / 2, popUp.width * 0.8, popUp.height * 0.8);
+
+}
+
   // Lose condition
   enemies.forEach(e => {
     if (!gameEndEvent&& e.x === player.x && e.y === player.y) {
@@ -376,6 +412,7 @@ function draw() {
       messageTimer = messageDelay;
     }
   });
+
 
 
   // Menu Drawing //
@@ -390,6 +427,7 @@ function draw() {
    drawResetButton();
    drawInfoMenu();
   }
+  
   return;
 }
 }
@@ -402,8 +440,9 @@ function drawMaze() {
     for (let x = 0; x < cols; x++) {
 
       if (maze[y][x] === 1) fill(89, 90, 92); // Walls tile colour
-      else if (maze[y][x] === 3) fill(0, 255, 0); // Win tile colour
-      else fill(233, 236, 240); // Path/empty tile colour
+       else if (maze[y][x] === 2) fill(255, 215, 0); // Trap tile colour
+       else if (maze[y][x] === 3) fill(0, 255, 0); // Win tile colour
+       else fill(233, 236, 240); // Path/empty tile colour
 
       rect(
         offsetX + x * tileSize - 0.5,
@@ -466,7 +505,7 @@ class Player {
     let nx = this.x + dx;
     let ny = this.y + dy;
 
-    if (maze[ny] && (maze[ny][nx] === 0 || maze[ny][nx] === 3)) {
+    if (maze[ny] && (maze[ny][nx] === 0 || maze[ny][nx] === 2 || maze[ny][nx] === 3)) {
       this.x = nx;
       this.y = ny;
     }
