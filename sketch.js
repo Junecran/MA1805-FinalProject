@@ -131,10 +131,10 @@ let maze = [
 
 // Preload //  
 function preload() {
-  mainMenuImg = loadImage("assets/SafetySearchMenu.png");
-  infoMenuImg = loadImage("assets/SSMHowToPlay.png"); 
-  popUpImg = loadImage("assets/SSMPopUp.png"); 
-  robotoFont = loadFont("assets/RobotoMedium.ttf");
+  mainMenuImg = loadImage("SafetySearchMenu.png");
+  infoMenuImg = loadImage("SSMHowToPlay.png"); 
+  popUpImg = loadImage("SSMPopUp.png"); 
+  robotoFont = loadFont("RobotoMedium.ttf");
 }
 
 
