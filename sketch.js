@@ -133,7 +133,7 @@ let maze = [
 // Preload //  
 function preload() {
   mainMenuImg = loadImage("Assets/SafetySearchMenu.png");
-  infoMenu = loadImage("Assets/SSMHowToPlay.png"); 
+  infoMenuImg = loadImage("Assets/SSMHowToPlay.png"); 
   robotoFont = loadFont("Assets/RobotoMedium.ttf");
 }
 
@@ -145,31 +145,31 @@ function setup() {
     img: mainMenuImg,
     width: 750, // Size 
     height: 600,
-    x: (width - 750) / 2, // Dynamic placement
+    x: (width - 750) / 2, // Placement
     y: (height - 600) / 2
    };
 
 // Information Menu Settings //
    infoMenu = {
-    img: infoMenu,
-    width: 950, // Size 
-    height: 600,
-    x: (width - 950) / 2, // Dynamic placement
-    y: (height - 600) / 2
+    img: infoMenuImg,
+    width: 900 , // Size 
+    height: 700,
+    x: (width - 900) / 2, // Placement
+    y: (height - 700) / 4
    };
 
   cols = maze[0].length;
   rows = maze.length;
   tileSize = floor(min(width / cols, height / rows));
 
-  updateOffsets();
+  updateOffsets(); // Dynamic resizing For the menus
   resetGame();
 }
 
 // Functions for the Resizing window //
 function updateOffsets() {
-  offsetX = (width - cols * tileSize) / 2;
-  offsetY = (height - rows * tileSize) / 2;
+  offsetX = (windowWidth - cols * tileSize) / 2;
+  offsetY = (windowHeight - rows * tileSize) / 2;
 }
 
 function windowResized() {
@@ -225,10 +225,10 @@ function drawInfoMenu() {
 }
 
 function drawBackButton() {
-  let w = infoMenu.width * 0.25;
-  let h = infoMenu.height * 0.06;
-  let x = infoMenu.x + infoMenu.width * -0.05;
-  let y = infoMenu.y + infoMenu.height * 0.22;
+  let w = infoMenu.width * backButtonPos.bW;
+  let h = infoMenu.height * backButtonPos.bH;
+  let x = infoMenu.x + infoMenu.width * backButtonPos.bX;
+  let y = infoMenu.y + infoMenu.height * backButtonPos.bY;
 
   // Hover detection
   let hovering = mouseX >= x && mouseX <= x + w &&
