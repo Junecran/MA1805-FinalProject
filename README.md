@@ -32,27 +32,8 @@ Time constraints limited the scope of this project, so I prioritised establishin
 
 
 # Maze Maker - Extra Code
+**Quick Description**
 
-
-
-
-
-   
-
-## Study Notes 
-
-- class
-- maybe else
-- the coollision check 
-- THis
--  constructor instead of let in classes
-### Info
-
-## Maze Maker Code
-
-**Description**
-
-## Debrief
 
 ## References Used
 - Savestrings -  https://p5js.org/reference/p5/saveStrings
@@ -64,3 +45,8 @@ Time constraints limited the scope of this project, so I prioritised establishin
    Solve the maze to reach the green tile to win. However, beware of viruses and hackers that will hunt you down; touching them will cause a game over. Trap tiles will randomly appear to slow your progress. 
 
 ## Study Notes 
+- class
+- maybe else
+- the coollision check 
+- THis
+-  constructor instead of let in classes
