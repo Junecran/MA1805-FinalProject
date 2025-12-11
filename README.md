@@ -1,7 +1,7 @@
 **Eleanor Craner** - [GitHub Link](https://github.com/Junecran/MA1805-InteractiveProject2025) - [Website Link](https://junecran.github.io/MA1805-InteractiveProject2025/)
 
 
-# [Safety Search Game](SafetySearchGame/index.html) - ###Link to Game
+# [Safety Search Game](SafetySearchGame/index.html) - Link to Game
 This maze game, inspired by Pac-Man, highlights the risks of navigating the internet. The enemies, modelled after Pac-Man's pursuers, represent hackers and scammers who exploit users, from nuisance calls to large-scale financial scams. Viruses are depicted as less aggressive enemies that move randomly, reflecting the threat of malicious links and compromised websites.
 
 As the internet becomes more integrated into daily life, educating users about online risks is essential. While this game does not address every issue, it offers an engaging introduction to online safety.
@@ -47,36 +47,38 @@ The interactivity comes from the mousePressed() function. Clicking on any cell t
 ## References and Study Note
 - The 'Dino Game' i referenced in the README - https://trex-runner.com
 
+
 **Enemy Path Following**
-Forward → Reverse → Forward → Reverse … stops Go forward through the array → when you reach the end, instantly teleport back to the start.
+//Forward → Reverse → Forward → Reverse … stops Go forward through the array → when you reach the end, instantly teleport back to the start.
 - The 'PingPong' Math for smooth pathing https://docs.unity3d.com/ScriptReference/Mathf.PingPong.html
 - Ai Pathfinding https://theory.stanford.edu/~amitp/GameProgramming/
 
+
 **Enemy Chasing Logic**
-Move toward the strongest direction first (horizontal vs vertical). Creates the classic "chase" behavior — simple but effective.
+//Move toward the strongest direction first (horizontal vs vertical). Creates the classic "chase" behavior — simple but effective.
 -https://gameinternals.com/understanding-pac-man-ghost-behavior
 
 if (Math.abs(dx) > Math.abs(dy)) {
   // Try horizontal movement first
 }
 
-**SetTimeout** No notes needed pretty simple to use but very glad i used it.
 
 **Game Reset System**
-checks whether: the player is at the original spawn /the enemy list matches the original spawn list
-If all match → the game is at its pure restart state.
--https://gameprogrammingpatterns.com/state.html
+//checks whether: the player is at the original spawn /the enemy list matches the original spawn list
+//If all match → the game is at its pure restart state. -https://gameprogrammingpatterns.com/state.html
 
 let startEnemies = [[9,9],[75,75],[9,75],[75,9],[60,30],[30,60],[37,20],[50,60],[20,40],[46,24],[40,55]];
-
 if (player.x !== 39 || player.y !== 41) return false;
-
 for (let i=0; i<enemies.length; i++) {
   if (enemies[i].x !== startEnemies[i][0] ||
       enemies[i].y !== startEnemies[i][1]) 
     return false;
 }
 return true;
+
+
+**SetTimeout** No notes needed pretty simple to use but very glad i used it.
+
 
 ### Maze Maker Tool References
 - Savestrings -  https://p5js.org/reference/p5/saveStrings
