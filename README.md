@@ -33,6 +33,7 @@ Time constraints limited the scope of this project, so I prioritised establishin
 
 - Finally, I wish I had more time to develop the game's features. I intended the 'pop-ups' to appear more intrusive and randomised. I also wanted to experiment with the user interface style and create a more visually appealing maze and gameplay using modern UI menus, possibly combined with arcade game styles.
 
+**There are solution and trap locations Images in the 'SafetySearchGame/assets' if needed**
 
 # [Maze Maker Tool](MazeMakerCode/index.html) - Link to Extra Code
 

@@ -151,10 +151,10 @@ function setup() {
   // Information Menu Settings //
   infoMenu = {
    img: infoMenuImg,
-   width: 900 , // Size 
-   height: 700,
-   x: (width - 900) / 2, // Placement
-   y: (height - 700) / 4
+   width: 1100 , // Size 
+   height: 800,
+   x: (width - 1100) / 2 , // Placement
+   y: (height - 800) / 6
    };
 
 // Pop Up Settings //
@@ -169,10 +169,10 @@ function setup() {
    // Guides Settings //
   guides = {
    img: guidesImg,
-   width: 900, // Size
-   height: 700,
-   x: (width - 900) / 2, // Placement
-   y: (height - 700) / 2 + 100 
+   width: 1100, // Size
+   height: 1400,
+   x: (width - 1100) / 1.7 , // Placement
+   y: (height - 1400) / 2 + 270 
   };
 
 
@@ -258,7 +258,7 @@ function drawInfoMenu() {
   textAlign(CENTER, CENTER);
   textSize(h * 0.5);
   textFont(robotoFont);
-  text("How to Play?", x + w / 6.4, y + h / 2.2);
+  text("How to Play?", x + w / 6.2, y + h / 2.2);
 }
 
 // Back to Menu Button  //
@@ -361,6 +361,7 @@ function resetGame() {
   ];
   gameEndEvent= false;
   showMainMenu = true;
+  triggeredPopUp = false;
   showTemporaryMessage = false;
   overlayMessage = "";
 }
@@ -429,7 +430,7 @@ function draw() {
  if (showMainMenu) {
   background(255);
 if (showInfoMenu) {
-  // Information Menu (highest priority)
+  // Information Menu 
   background(255);
   image(infoMenu.img, infoMenu.x, infoMenu.y, infoMenu.width, infoMenu.height);
   image(guides.img, guides.x, guides.y, guides.width * 0.8, guides.height * 0.8);
@@ -440,7 +441,7 @@ if (showInfoMenu) {
    image(mainMenu.img, mainMenu.x, mainMenu.y, mainMenu.width, mainMenu.height);
    drawResetButton();
    drawInfoMenu();
-  } 
+  } }
  // Pop Up Logic //
   if (!showMainMenu && !showPopUp && !triggeredPopUp && maze[player.y][player.x] === 2) {
     showPopUp = true;
@@ -452,7 +453,7 @@ if (showInfoMenu) {
     imageMode(CENTER);
     image(popUp.img, width / 2, height / 2, popUp.width * 0.8, popUp.height * 0.8);
     pop();
-  }
+  
  }
 }
 
@@ -466,7 +467,7 @@ function drawMaze() {
 
       if (maze[y][x] === 1) fill(89, 90, 92); // Walls tile colour
        else if (maze[y][x] === 2) fill(220, 220, 220); // Trap tile colour
-       else if (maze[y][x] === 3) fill(0, 255, 0); // Win tile colour
+       else if (maze[y][x] === 3) fill(65, 168, 85); // Win tile colour
        else fill(233, 236, 240); // Path/empty tile colour
 
       rect(
