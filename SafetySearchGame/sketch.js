@@ -289,7 +289,7 @@ function drawReadmeButton() {
   textAlign(CENTER, CENTER);
   textSize(h * 0.44);
   textFont(robotoFont);
-   text("Where is the README?", x + w / 4.45, y + h / 2.2);
+   text("README", x + w / 7, y + h / 2.2);
 }
 
 //  -- Button Inputs --  //
@@ -356,7 +356,7 @@ let y5 = mainMenu.y + mainMenu.height * readmeButtonPos.rmY;
 
 if (mouseX >= x5 && mouseX <= x5 + w5 &&
     mouseY >= y5 && mouseY <= y5 + h5) {
-  window.open("https://junecran.github.io/MA1805-InteractiveProject2025/"); 
+  window.open("https://junecran.github.io/MA1805-InteractiveProject2025/README.md"); 
   return;
 }
 }
